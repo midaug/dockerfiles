@@ -17,8 +17,8 @@ ENV PRIVOXY_ADDR 0.0.0.0
 ENV PRIVOXY_PORT 8118
 
 RUN apk upgrade \
-    && apk add bash libsodium \
-    && apk add --virtual .build-deps \
+    && apk add --no-cache bash libsodium \
+    && apk add --no-cache --virtual .build-deps \
        build-base \
        tar \
        curl \
@@ -47,13 +47,13 @@ RUN apk upgrade \
             | xargs -r apk info --installed \
             | sort -u \
         )" \
-    && apk add --virtual .run-deps $run_deps \
+    && apk add --no-cache --virtual .run-deps $run_deps \
     && apk del .build-deps \
     && rm -rf shadowsocks-libev-${SS_VERSION}.tar.gz \
        shadowsocks-libev-${SS_VERSION} \
        /var/cache/apk/*
 
-RUN apk add privoxy \
+RUN apk add --no-cache privoxy \
     && echo "forward-socks5 / 127.0.0.1:1080 ." >> /etc/privoxy/config
 
 ADD entrypoint.sh /entrypoint.sh
